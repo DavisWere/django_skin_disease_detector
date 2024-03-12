@@ -1,5 +1,5 @@
 import random
-skin_diseases = [
+Skin_diseases = [
     "Acne",
     "Eczema (Dermatitis)",
     "Psoriasis",
@@ -80,8 +80,7 @@ skin_diseases = [
     "Solar Lentigo",
     "Viral Exanthem"
 ]
-random_index= random.randint(0, len(skin_diseases) -1)
-import random
+
 
 skin_diseases = [
     "Acne", "Eczema (Dermatitis)", "Psoriasis", "Rosacea", "Dermatitis Herpetiformis",
@@ -100,7 +99,7 @@ skin_diseases = [
 
 
 random_index = random.randint(0, len(skin_diseases) - 1)
-
+pass
 
 print(skin_diseases[random_index])
 
@@ -112,5 +111,6 @@ for i in range(10, 97, 3):
     accuracy.append(percentage_string)
 
 # Append random accuracy values
-random_index = random.randint(0, len(accuracy) - 1)  # Generate a random index
-print(accuracy[random_index])
+random_index = random.randint(0, len(accuracy) - 1)
+pass  # Generate a random index
+# print(accuracy[random_index])

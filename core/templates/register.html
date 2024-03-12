@@ -11,7 +11,10 @@
         <div class="flex flex-col gap-4">
             <h1 class="text-4xl font-extrabold">Skin Disease Detection</h1>
 
-            <form id="userForm" class="mb-4">
+
+            <form id="userForm" class="mb-4" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+
                 <!-- <h2 class="text-lg font-semibold mb-2">Register User</h2> -->
                 <div class="flex flex-col mb-2">
                     <label for="username" class="mb-1">Username</label>
@@ -25,16 +28,20 @@
                     <label for="password" class="mb-1">Password</label>
                     <input type="password" id="password" name="password" class="px-4 py-2 border-b rounded">
                 </div>
-                <div class="flex flex-col mb-2">
+                <!-- <div class="flex flex-col mb-2">
                     <label for="password_confirm" class="mb-1">Password Confirm</label>
                     <input type="password_confirm" id="password_confirm" name="password_confirm" class="px-4 py-2 border-b rounded">
-                </div>
+                </div> -->
                 <div class="flex flex-col mb-2">
                     <label for="phone" class="mb-1">Phone Number</label>
-                    <input type="phone" id="phone" name="phone" class="px-4 py-2 border-b rounded">
+                    <input type="phone" id="phone" name="phone_number" class="px-4 py-2 border-b rounded">
+                </div>
+                <div class="flex flex-col mb-2">
+                    <label for="email" class="mb-1">location</label>
+                    <input type="text" id="location" name="location" class="px-4 py-2 border-b rounded">
                 </div>
                 <div class="w-full flex justify-end mb-2">
-                    <p class="font-bold text-sm">Already have an account ? Sign In </p>
+                    <a href="/login" class="font-bold text-sm">Already have an account ? Sign In </p>
                 </div>
                 <div class="w-full flex justify-center">
                     <button type="submit" class="bg-blue-500 text-white px-6 py-2
@@ -44,5 +51,7 @@
 
         </div>
     </div>
+
+    
 </body>
 </html>

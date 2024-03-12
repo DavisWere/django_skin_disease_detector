@@ -1,45 +1,65 @@
-{% if success_message %}
-<div class="alert alert-success" role="alert">
-  {{ success_message }}
-</div>
-{% endif %}
-{% block content %}
-    <!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Image</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Function to display the uploaded image
+    function displayImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          // Create an image element
+          var imgElement = document.createElement("img");
+          imgElement.src = e.target.result;
+          imgElement.classList.add("w-full", "rounded-lg");
+          
+          // Get the canvas div and append the image
+          var canvasDiv = document.getElementById("canvas");
+          canvasDiv.innerHTML = ""; // Clear existing content
+          canvasDiv.appendChild(imgElement);
+        }
+        
+        reader.readAsDataURL(input.files[0]); // Read the uploaded file as a data URL
+      }
+    }
+  </script>
 </head>
 <body class="bg-gray-100 flex flex-col justify-center items-center gap-4 h-screen">
-    <div class="container mt-5 flex gap-4 flex-wrap w-9/12 p-4 rounded h-full">
-        <div class="w-5/12 flex flex-col gap-4 p-2 rounded h-full">
-       <div class="card flex flex-col gap-4">
-          <div class="card-header">
-            <h2 class="text-xl font-extrabold">Upload an Image</h2>
-          </div>
-
-          <div class="card-body">
-            <form method="post" class="flex flex-col gap-4" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-group flex flex-col gap-2">
-                <label for="image">Select Image:</label>
-                <input type="file" name="image" id="image"
-                       class="form-control-file rounded-lg bg-blue-100 p-4" accept="image/*" required>
-                <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
-              </div>
-              <button type="submit" class="btn btn-primary w-fit text-white font-semibold
-                px-4 py-2 bg-blue-400 rounded hover:bg-blue-500">Detect Skin Diseases</button>
-            </form>
-          </div>
+  <div class="container mt-5 flex gap-4 flex-wrap w-9/12 p-4 rounded h-full">
+    <div class="w-5/12 flex flex-col gap-4 p-2 rounded h-full">
+      <div class="card flex flex-col gap-4">
+        <div class="card-header">
+          <h2 class="text-xl font-extrabold">Upload an Image</h2>
         </div>
-    </div>
-
-        <div class="w-5/12 bg-gray-50 p-2 rounded flex flex-col gap-4">
-            <h1 class="text-lg font-extrabold">Output</h1>
+        <div class="card-body">
+          <form method="post" class="flex flex-col gap-4" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group flex flex-col gap-2">
+              <label for="image">Select Image:</label>
+              <input type="file" name="image" id="image" class="form-control-file rounded-lg bg-blue-100 p-4" accept="image/*" onchange="displayImage(this);" required>
+              <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
+            </div>
+            <button type="submit" class="btn btn-primary w-fit text-white font-semibold px-4 py-2 bg-blue-400 rounded hover:bg-blue-500">Detect Skin Diseases</button>
+          </form>
         </div>
+      </div>
     </div>
-
+    <div class="w-5/12 bg-gray-50 p-2 rounded flex flex-col gap-4">
+      <h1 class="text-lg font-extrabold">Output</h1>
+      <div id="canvas"></div> <!-- This is where the uploaded image will be displayed -->
+      <ul>
+        {% for result in results %}
+        <li>
+          <strong>Skin Disease:</strong> {{ result.skin_diseases }}<br>
+          <strong>Accuracy:</strong> {{ result.accuracy }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </body>
 </html>
-{% endblock %}

@@ -98,20 +98,17 @@ skin_diseases = [
     "Pilonidal Cyst", "Lipoma", "Sebaceous Cyst", "Keloids", "Angiomas", "Dermatofibroma"
 ]
 
-# Generate a random index
+
 random_index = random.randint(0, len(skin_diseases) - 1)
 
-# Print the element at the random index
+
 print(skin_diseases[random_index])
 
-# print(skin_diseases(random_index))
+
 accuracy = []
 
-# Append float values and their corresponding percentage strings
 for i in range(10, 97, 3):
-    float_value = i / 100.0
     percentage_string = str(i) + '%'
-    accuracy.append(float_value)
     accuracy.append(percentage_string)
 
 # Append random accuracy values

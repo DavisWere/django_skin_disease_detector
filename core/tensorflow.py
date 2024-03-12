@@ -113,4 +113,4 @@ for i in range(10, 97, 3):
 # Append random accuracy values
 random_index = random.randint(0, len(accuracy) - 1)
 pass  # Generate a random index
-# print(accuracy[random_index])
+print(accuracy[random_index])

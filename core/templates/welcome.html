@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Disease Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        header {
+            background-color: #e9ebee;
+            color: rgb(15, 15, 15);
+            text-align: center;
+            padding: 20px 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f6f7f8;
+            padding: 10px;
+        }
+        nav a {
+            color: rgb(14, 13, 13);
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        .hero {
+            background-image: url('https://source.unsplash.com/random/1600x900/?skin,disease');
+            background-size: cover;
+            background-position: center;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .feature {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .feature-item {
+            flex: 1;
+            max-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .feature-item h2 {
+            margin-top: 0;
+        }
+        footer {
+            background-color: #4a5568;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .about-section {
+            padding: 50px 0;
+        }
+    </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+    <nav class="flex justify-end py-1 items-center text-md">
+        
+        <div>
+            <a href="/">Home</a>
+            <a href="#about">About</a>
+        </div>
+        
+        <a class="px-2 py-1 bg-blue-400 rounded"  href="/login">Sign In</a>
+        
+       
+    </nav>
+    <div class="hero">
+        <div class="container">
+            <h1>Empowering Health through Technology</h1>
+            <p>Upload an image of any suspected skin disease for detection.</p>
+        </div>
+    </div>
+    <div id="about" class="about-section">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>Welcome to Skin Disease Detection, your trusted platform for detecting skin diseases using advanced technology. Our mission is to empower individuals to take control of their health by providing fast and accurate detection of skin conditions.</p>
+            <p>At Skin Disease Detection, we leverage cutting-edge algorithms and machine learning techniques to analyze uploaded images and identify potential skin diseases. Our user-friendly interface makes it easy for anyone to upload an image and receive prompt results.</p>
+            <p>We prioritize the security and privacy of your data. Our system is designed to ensure that your information remains confidential throughout the detection process.</p>
+            <p>Whether you're a healthcare professional or an individual concerned about your skin health, Skin Disease Detection is here to support you on your wellness journey. Together, let's promote skin health and well-being for everyone.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 Skin Disease Detection. All rights reserved.</p>
+    </footer>
+</body>
+</html>

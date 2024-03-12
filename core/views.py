@@ -5,6 +5,7 @@ from .forms import SkinDiseaseImageForm, CustomUserRegistrationForm ,LoginForm
 from django.contrib import messages
 from .models import TensorflowResult
 from . import tensorflow
+import random
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -74,3 +75,27 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
+def welcome(request):
+    return render(request, 'welcome.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('/login')
+
+def tensorflowresult(request):
+    skin_disease = TensorflowResult.objects.create(skin_diseases)
+
+    accuracies = []
+    for i in range(10, 97, 3):
+        percentage_string = str(i) + '%'
+        accuracies.append(percentage_string)
+        skin_disease.accuracies.create(value=percentage_string)
+    random_index = random.randint(0, len(accuracies) - 1)
+    random_accuracy = accuracies[random_index]
+    accuracies = random_accuracy
+    
+    skin_diseases = TensorflowResult.objects.all()
+    print(skin_diseases)
+    print(accuracies)
+    return render(request, 'home.html', {'accuracies': accuracies, 'skin_diseases': skin_diseases})

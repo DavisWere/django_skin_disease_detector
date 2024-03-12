@@ -1,4 +1,8 @@
-
+{% if success_message %}
+<div class="alert alert-success" role="alert">
+  {{ success_message }}
+</div>
+{% endif %}
 {% block content %}
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -15,6 +19,9 @@
                 <input type="file" name="image" id="image" class="form-control-file" accept="image/*" required>
                 <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
               </div>
+              <p>
+    
+              </p>
               <button type="submit" class="btn btn-primary">Detect Skin Diseases</button>
             </form>
           </div>

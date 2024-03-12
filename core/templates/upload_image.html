@@ -1,0 +1,25 @@
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="mb-0">Upload an Image</h2>
+          </div>
+          <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="image">Select Image:</label>
+                <input type="file" name="image" id="image" class="form-control-file" accept="image/*" required>
+                <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Detect Skin Diseases</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

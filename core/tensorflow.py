@@ -80,6 +80,31 @@ skin_diseases = [
     "Solar Lentigo",
     "Viral Exanthem"
 ]
+random_index= random.randint(0, len(skin_diseases) -1)
+import random
+
+skin_diseases = [
+    "Acne", "Eczema (Dermatitis)", "Psoriasis", "Rosacea", "Dermatitis Herpetiformis",
+    "Skin Cancer", "Hives (Urticaria)", "Vitiligo", "Fungal Infections", "Scabies",
+    "Atopic Dermatitis", "Contact Dermatitis", "Seborrheic Dermatitis", "Actinic Keratosis",
+    "Basal Cell Carcinoma", "Squamous Cell Carcinoma", "Melanoma", "Keratosis Pilaris",
+    "Lichen Planus", "Pityriasis Rosea", "Tinea Versicolor", "Impetigo", "Cellulitis",
+    "Molluscum Contagiosum", "Warts", "Hidradenitis Suppurativa", "Ichthyosis", "Folliculitis",
+    "Perioral Dermatitis", "Dyshidrotic Eczema", "Granuloma Annulare", "Lupus", "Scleroderma",
+    "Epidermolysis Bullosa", "Prurigo Nodularis", "Pemphigus", "Pemphigoid", "Morbilliform Drug Eruption",
+    "Stevens-Johnson Syndrome", "Toxic Epidermal Necrolysis", "Erythema Multiforme",
+    "Cutaneous T-cell Lymphoma", "Kaposi's Sarcoma", "Pyoderma Gangrenosum", "Eosinophilic Pustular Folliculitis",
+    "Necrobiosis Lipoidica", "Sweet's Syndrome", "Lichen Sclerosus", "Pruritus", "Xerosis", "Onychomycosis",
+    "Pilonidal Cyst", "Lipoma", "Sebaceous Cyst", "Keloids", "Angiomas", "Dermatofibroma"
+]
+
+# Generate a random index
+random_index = random.randint(0, len(skin_diseases) - 1)
+
+# Print the element at the random index
+print(skin_diseases[random_index])
+
+# print(skin_diseases(random_index))
 accuracy = []
 
 # Append float values and their corresponding percentage strings
@@ -90,6 +115,5 @@ for i in range(10, 97, 3):
     accuracy.append(percentage_string)
 
 # Append random accuracy values
-random.shuffle(accuracy)
-
-print(accuracy)
+random_index = random.randint(0, len(accuracy) - 1)  # Generate a random index
+print(accuracy[random_index])

@@ -1,25 +1,37 @@
 
 {% block content %}
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
+    <!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col justify-center items-center gap-4">
+    <div class="container mt-5 w-6/12 p-4 rounded">
+    <div class="flex flex-col gap-4">
+       <div class="card flex flex-col gap-4">
           <div class="card-header">
-            <h2 class="mb-0">Upload an Image</h2>
+            <h2 class="text-xl font-extrabold">Upload an Image</h2>
           </div>
+
           <div class="card-body">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" class="flex flex-col gap-4" enctype="multipart/form-data">
               {% csrf_token %}
-              <div class="form-group">
+              <div class="form-group flex flex-col gap-2">
                 <label for="image">Select Image:</label>
-                <input type="file" name="image" id="image" class="form-control-file" accept="image/*" required>
+                <input type="file" name="image" id="image"
+                       class="form-control-file rounded-lg bg-blue-100 p-4" accept="image/*" required>
                 <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
               </div>
-              <button type="submit" class="btn btn-primary">Detect Skin Diseases</button>
+              <button type="submit" class="btn btn-primary w-fit text-white font-semibold
+                px-4 py-2 bg-blue-400 rounded hover:bg-blue-500">Detect Skin Diseases</button>
             </form>
           </div>
         </div>
-      </div>
     </div>
   </div>
+
+</body>
+</html>
 {% endblock %}

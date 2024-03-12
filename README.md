@@ -1,0 +1,1 @@
+# django_skin_disease_detector

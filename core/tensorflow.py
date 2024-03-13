@@ -99,7 +99,6 @@ skin_diseases = [
 
 
 random_index = random.randint(0, len(skin_diseases) - 1)
-pass
 
 print(skin_diseases[random_index])
 

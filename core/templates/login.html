@@ -13,6 +13,7 @@
 
             <form id="userForm" class="mb-4" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+             
                  <h2 class="text-lg font-semibold mb-2">Register User</h2> 
                 <div class="flex flex-col mb-2">
                     <label for="username" class="mb-1">Username</label>
@@ -33,7 +34,8 @@
             <!-- <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit">Login</button> -->
+                <button type="submit">Login</button>
+            </form> -->
         </div>
     </div>
 </body>

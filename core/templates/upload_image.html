@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Image</title>
+  <a class="px-2 py-1 bg-blue-400 rounded h-fit w-fit"   href="/logout">Logout</a> 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Function to display the uploaded image
@@ -48,18 +49,17 @@
         </div>
       </div>
     </div>
-    <a class="px-2 py-1 bg-blue-400 rounded h-fit w-fit"  href="/logout">Logout</a>
+    
     <div class="w-5/12 bg-gray-50 p-2 rounded flex flex-col gap-4">
       <h1 class="text-lg font-extrabold">Output</h1>
-      <div id="canvas"></div> <!-- This is where the uploaded image will be displayed -->
-      <ul>
-        {% for result in results %}
-        <li>
-          <strong>Skin Disease:</strong> {{ result.skin_diseases }}<br>
-          <strong>Accuracy:</strong> {{ result.accuracy }}
-        </li>
-        {% endfor %}
-      </ul>
+  
+      <div id="canvas"></div>
+      {% if latest_result %}
+          <p><strong>Skin Disease:</strong> {{ latest_result.skin_diseases }}</p>
+          <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p>
+      {% else %}
+          <p>No results available.</p>
+      {% endif %}
     </div>
   </div>
 </body>

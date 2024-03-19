@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SkinDiseaseImageForm, CustomUserRegistrationForm ,LoginForm
 from django.contrib import messages
-from .models import TensorflowResult
+from .models import TensorflowResult, SkinDiseaseImage
 from .forms import LoginForm
 import pandas as pd
 import openpyxl 
@@ -78,6 +79,7 @@ SEBACEOUS_CYST = 'Sebaceous Cyst'
 KELOIDS = 'Keloids'
 ANGIOMAS = 'Angiomas'
 DERMATOFIBROMA = 'Dermatofibroma'
+NODISEASE = 'no known disease'  
 
 DISEASE_CHOICES = [
 (ACNE, ACNE),
@@ -270,6 +272,18 @@ def generate_pdf(request):
 
     return response
 
+def skin_disease_image_view(request):
+    # Get the last uploaded image based on the order of insertion (last object in the database)
+    last_uploaded_image = SkinDiseaseImage.objects.last()
+    
+    # Check if any images exist in the database
+    if last_uploaded_image is not None:
+        context = {'image': last_uploaded_image}
+        return render(request, 'upload_image.html', context)
+    else:
+        # Handle the case where no images are found
+        return render(request, 'no_images.html')
+
 def upload_image(request):
     success_message = None  # Initialize success message variable
     error_message = None  # Initialize error message variable
@@ -281,7 +295,8 @@ def upload_image(request):
             if request.FILES.get('image', False):  # Check if an image file is uploaded
                 form.save()
                 # success_message = ''
-                # insert_data_into_database()
+                skin_disease_image_view(request)
+                insert_data_into_database()
                 messages.success(request, success_message)
                 latest_result = TensorflowResult.objects.last()
 
@@ -303,11 +318,18 @@ def upload_image(request):
 
 
 
+
+
+
+
+
+
+
 def register_user(request):
     if request.method == 'POST':
         form = CustomUserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save() 
             # Redirect to a success page or login page
             return redirect('/upload')  
     else:
@@ -322,8 +344,11 @@ def login_view(request):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user , None)
+                login(request, user)
                 return redirect('/upload')  # Redirect to the upload image page
+            else:
+                # Invalid username or password, show error message
+                messages.error(request, 'Invalid username or password')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -334,4 +359,23 @@ def welcome(request):
 def logout_view(request):
     logout(request)
     return redirect('/login')
+
+def image_render(request):
+    uploaded_image = None
+    if uploaded_image_id := request.GET.get('uploaded_image_id'):
+        uploaded_image = uploaded_image.get(id=uploaded_image_id)
+
+    return render(request, 'upload_image.html', {'uploaded_image': uploaded_image})
+
+def display_skin_disease_image_by_id(request, image_id):
+    # Filter SkinDiseaseImage by ID
+    try:
+        image = SkinDiseaseImage.objects.get(pk=image_id)
+    except SkinDiseaseImage.DoesNotExist:
+        # Handle the case where the image with the specified ID does not exist
+        return render(request, 'image_not_found.html')
+
+    # Pass the filtered image to the template for rendering
+    return render(request, 'image_detail.html', {'image': image})
+
 

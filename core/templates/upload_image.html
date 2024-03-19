@@ -52,15 +52,7 @@
     
     <div class="w-5/12 bg-gray-50 p-2 rounded flex flex-col gap-4">
       <h1 class="text-lg font-extrabold">Output</h1>
-  
-      <div id="canvas"></div>
-      {% if latest_result %}
-          <p><strong>Skin Disease:</strong> {{ latest_result.skin_diseases }}</p>
-          <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p>
-      {% else %}
-          <p>No results available.</p>
-      {% endif %}
-    </div>
-  </div>
+      <img src="{{ image.image.url }}" alt="Skin Disease Image">
+     
 </body>
 </html>

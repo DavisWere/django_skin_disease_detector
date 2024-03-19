@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Image</title>
-  <a class="px-2 py-1 bg-blue-400 rounded h-fit w-fit"   href="/logout">Logout</a> 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Function to display the uploaded image
@@ -16,11 +15,12 @@
           // Create an image element
           var imgElement = document.createElement("img");
           imgElement.src = e.target.result;
-          imgElement.classList.add("w-full", "rounded-lg");
+          imgElement.classList.add("rounded-lg", "h-[300px]", "max-w-[500px]");
           
           // Get the canvas div and append the image
           var canvasDiv = document.getElementById("canvas");
           canvasDiv.innerHTML = ""; // Clear existing content
+          canvasDiv.classList.add("max-w-[500px]");
           canvasDiv.appendChild(imgElement);
         }
         
@@ -30,29 +30,41 @@
   </script>
 </head>
 <body class="bg-gray-100 flex flex-col justify-center items-center gap-4 h-screen">
-  <div class="container mt-5 flex gap-4 flex-wrap w-9/12 p-4 rounded h-full">
-    <div class="w-5/12 flex flex-col gap-4 p-2 rounded h-full">
+    {% include 'components/nav.html' %}
+  <div class="container mt-5 flex gap-4 flex-wrap w-11/12 p-4 rounded h-full">
+    <div class="w-7/12 flex flex-col gap-4 p-2 rounded h-full">
       <div class="card flex flex-col gap-4">
         <div class="card-header">
           <h2 class="text-xl font-extrabold">Upload an Image</h2>
         </div>
-        <div class="card-body">
+        <div class="h-full">
+            <div id="canvas" class="h-[350px] border border-gray-300 rounded "></div>
+
           <form method="post" class="flex flex-col gap-4" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group flex flex-col gap-2">
               <label for="image">Select Image:</label>
-              <input type="file" name="image" id="image" class="form-control-file rounded-lg bg-blue-100 p-4" accept="image/*" onchange="displayImage(this);" required>
+              <input type="file" name="image" id="image" class="form-control-file rounded-lg
+              border p-4" accept="image/*" onchange="displayImage(this);" required>
               <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
             </div>
-            <button type="submit" class="btn btn-primary w-fit text-white font-semibold px-4 py-2 bg-blue-400 rounded hover:bg-blue-500">Detect Skin Diseases</button>
+            <button type="submit" class="btn btn-primary w-full text-white font-semibold px-4 py-2
+             bg-blue-400 rounded hover:bg-blue-500">Detect Skin Diseases</button>
           </form>
         </div>
       </div>
     </div>
     
-    <div class="w-5/12 bg-gray-50 p-2 rounded flex flex-col gap-4">
+    <div class="w-4/12 bg-gray-50 h-fit p-2 rounded flex flex-col gap-4">
       <h1 class="text-lg font-extrabold">Output</h1>
-      <img src="{{ image.image.url }}" alt="Skin Disease Image">
-     
+  
+      {% if latest_result %}
+          <p><strong>Skin Disease:</strong> {{ latest_result.skin_diseases }}</p>
+          <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p>
+      {% else %}
+          <p>No results available.</p>
+      {% endif %}
+    </div>
+  </div>
 </body>
 </html>

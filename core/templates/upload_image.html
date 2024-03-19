@@ -20,7 +20,7 @@
           // Get the canvas div and append the image
           var canvasDiv = document.getElementById("canvas");
           canvasDiv.innerHTML = ""; // Clear existing content
-          canvasDiv.classList.add("h-[400px]", "max-w-[500px]");
+          canvasDiv.classList.add("max-w-[500px]");
           canvasDiv.appendChild(imgElement);
         }
         
@@ -38,7 +38,7 @@
           <h2 class="text-xl font-extrabold">Upload an Image</h2>
         </div>
         <div class="h-full">
-            <div id="canvas" class="h-[350px]"></div>
+            <div id="canvas" class="h-[350px] border border-gray-300 rounded "></div>
 
           <form method="post" class="flex flex-col gap-4" enctype="multipart/form-data">
             {% csrf_token %}

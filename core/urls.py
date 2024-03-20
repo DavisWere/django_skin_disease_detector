@@ -9,7 +9,7 @@ urlpatterns = [
     path('upload/success/', views.upload_image, name='upload_success'),
    
     
-    path('register/',views.register_user, name='registration'),
+    path('register',views.register_user, name='registration'),
     path('login/',views.login_view, name='login'),
     # path('custom-login/',views.custom_login_view, name='custom_login'),
     path('',views.welcome, name='welcome'),

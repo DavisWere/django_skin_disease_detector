@@ -295,15 +295,24 @@ def upload_image(request):
             if request.FILES.get('image', False):  # Check if an image file is uploaded
                 form.save()
                 # success_message = ''
-                skin_disease_image_view(request)
+                
                 insert_data_into_database()
                 messages.success(request, success_message)
                 latest_result = TensorflowResult.objects.last()
 
                 context = {'latest_result': latest_result}
+                last_uploaded_image = SkinDiseaseImage.objects.last()
+    
+    # Check if any images exist in the database
+                if last_uploaded_image is not None:
+                    context = {'latest_result':latest_result,'image': last_uploaded_image}
+                    return render(request, 'upload_image.html', context)
+                else:
+                    # Handle the case where no images are found
+                    return render(request, 'no_images.html')
                 
                 
-                return render(request, 'upload_image.html', context)
+                # return render(request, 'upload_image.html', context)
                 
             else:
                 error_message = 'Please select an image to upload'
@@ -313,6 +322,7 @@ def upload_image(request):
     else:
         
         form = SkinDiseaseImageForm()
+        skin_disease_image_view(request)
 
     return render(request, 'upload_image.html', {'form': form, 'success_message': success_message, 'error_message': error_message})
 

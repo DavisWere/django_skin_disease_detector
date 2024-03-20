@@ -138,6 +138,25 @@ DISEASE_CHOICES = [
 (ANGIOMAS, 'Angiomas'),
 (DERMATOFIBROMA, 'Dermatofibroma')]
 
+from . import geolocation as GL
+
+def maps(request):
+    if request.method == 'POST':
+        address = request.POST.get('address')
+        latitude, longitude = GL.get_geolocation(address)
+        if latitude is not None and longitude is not None:
+            context = {
+                'latitude': latitude,
+                'longitude': longitude
+            }
+        else:
+            context = {
+                'error': 'Failed to get coordinates for the address.'
+            }
+    else:
+        context = {}
+    return render(request, 'components/maps.html', context)
+
 
 
 def generate_data():

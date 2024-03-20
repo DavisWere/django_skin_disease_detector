@@ -12,6 +12,7 @@ urlpatterns = [
     path('',views.welcome, name='welcome'),
     path('logout/',views.logout_view, name='logout'),
     path('excel-report/',views.generate_excel_file, name= 'generate_excel_file'),
-    path('pdf-report/', views.generate_pdf, name='generate_pdf')
+    path('pdf-report/', views.generate_pdf, name='generate_pdf'),
+    path('maps/', views.maps, name='maps'),
 
 ]

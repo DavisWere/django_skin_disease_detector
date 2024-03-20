@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <style>
+        /* Style for the map container */
+        #mapCanvas {
+            width: 800px;
+            height: 600px;
+            border: 2px solid green;
+        }
+    </style>
+    <!-- Preload Leaflet library -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js" as="script">
+</head>
+<body>
+    <div>
+        <h1>Map</h1>
+        <!-- Form to input address -->
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="address" placeholder="Enter Address">
+            <button type="submit">Search</button>
+        </form>
+        <!-- Display map -->
+        <div id="mapCanvas"></div> <!-- Change to a <div> instead of <canvas> -->
+    </div>
+
+    <!-- Include Leaflet library for displaying the map -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('mapCanvas', {
+                renderer: L.canvas(), // Use Canvas renderer
+                center: [1.2921, 36.8219], // Set the initial center
+                zoom: 1 // Set the initial zoom level
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(map);
+
+            // Add marker if coordinates are available
+            {% if latitude and longitude %}
+            L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

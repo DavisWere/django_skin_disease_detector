@@ -341,6 +341,7 @@ def upload_image(request):
     else:
         
         form = SkinDiseaseImageForm()
+        
         skin_disease_image_view(request)
 
     return render(request, 'upload_image.html', {'form': form, 'success_message': success_message, 'error_message': error_message})

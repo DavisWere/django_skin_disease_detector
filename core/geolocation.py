@@ -25,5 +25,5 @@ if latitude is not None and longitude is not None:
 else:
     print("Failed to get coordinates for the address.")
 
-get_geolocation(address)
+# get_geolocation(address)
 

@@ -4,28 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map</title>
+  <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Style for the map container */
         #mapCanvas {
             width: 800px;
             height: 600px;
-            border: 2px solid green;
         }
     </style>
     <!-- Preload Leaflet library -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js" as="script">
 </head>
 <body>
-    <div>
-        <h1>Map</h1>
+    <div class="flex flex-col gap-4 px-4">
+
+        <div class=" mt-4   bg-red-200 w-full">
+            {% include 'components\nav.html' %}
+          </div>
+
+        <h1 class="text-xl font-bold">Map</h1>
         <!-- Form to input address -->
         <form action="" method="post">
             {% csrf_token %}
-            <input type="text" name="address" placeholder="Enter Address">
-            <button type="submit">Search</button>
+            <input type="text" class="border p-2 rounded " name="address" placeholder="Enter Address">
+            <button class="border p-2 rounded bg-blue-400 text-white hover:bg-blue-500" type="submit">Search</button>
         </form>
         <!-- Display map -->
-        <div id="mapCanvas"></div> <!-- Change to a <div> instead of <canvas> -->
+        <div class="w-full h-[500px] overflow-auto border">
+            <div id="mapCanvas" class="border p-0 m-0"></div> <!-- Change to a <div> instead of <canvas> -->
+        </div>
     </div>
 
     <!-- Include Leaflet library for displaying the map -->
@@ -34,9 +41,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             var map = L.map('mapCanvas', {
                 renderer: L.canvas(), // Use Canvas renderer
-                center: [1.2921, 36.8219], // Set the initial center
-                zoom: 1 // Set the initial zoom level
+                center: [1.2921, 36.8219], // Set the initial center to the desired coordinates
+                zoom: 1 // Set the initial zoom level to 1
             });
+
+
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -46,7 +55,13 @@
 
             // Add marker if coordinates are available
             {% if latitude and longitude %}
-            L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+            L.marker([{{ latitude }}, {{ longitude }}], {
+                icon: L.icon({
+                    iconUrl: 'marker-shadow.jpeg', // Replace with the URL of your marker image
+                    iconSize: [32, 32], // Adjust the size of the marker image as needed
+                    shadowUrl: 'marker.jpeg' // URL of the shadow image (optional)
+                })
+            }).addTo(map);
             {% endif %}
         });
     </script>

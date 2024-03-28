@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SkinDiseaseImageForm, CustomUserRegistrationForm ,LoginForm
 from django.contrib import messages
-from .models import TensorflowResult, SkinDiseaseImage
+from .models import TensorflowResult, SkinDiseaseImage, Hospital
 from .forms import LoginForm
 import pandas as pd
 import openpyxl 
@@ -206,6 +206,47 @@ def find_nearest_hospitals(request):
         # Handle request exceptions (e.g., connection errors, timeout)
         error_message = f"Error: {e}"
         return render(request, 'error.html', {'error_message': error_message})
+def hospital_data(request):
+    # Define hospital details
+    hospitals = [
+        {
+            'name': 'Mp Shah',
+            'website': 'https://mpshahhosp.org/',
+            'contact': '+254 111 000600',
+        },
+        {
+            'name': 'The Nairobi Hospital',
+            'website': 'http://thenairobihosp.org/',
+            'contact': '+254 20 2845000',
+        },
+        {
+            'name': 'Mater Misericordiae Hospital',
+            'website': 'http://www.materkenya.com/',
+            'contact': '+254 20 6903000',
+        },
+        {
+            'name': 'Avenue Hospital Nairobi',
+            'website': 'http://www.avenuehealthcare.com/',
+            'contact': '+254 711 060000',
+        },
+    ]
+
+    # Shuffle the hospitals list to insert data at random
+    random.shuffle(hospitals)
+
+    # Insert data into the Hospital model
+    for hospital_data in hospitals:
+        Hospital.objects.create(
+            name=hospital_data['name'],
+            website=hospital_data['website'],
+            contact=hospital_data['contact'],
+        )
+
+    # Get all hospitals from the database
+    all_hospitals = Hospital.objects.all()
+
+    # Render a template with the inserted hospital data for demonstration
+    return render(request, 'upload_image.html', {'hospitals': all_hospitals})
 
 
 def generate_data():
@@ -363,15 +404,18 @@ def upload_image(request):
                 # success_message = ''
                 
                 insert_data_into_database()
+                hospital_data(request)
+                
                 messages.success(request, success_message)
                 latest_result = TensorflowResult.objects.last()
-
+                hospitals = Hospital.objects.order_by('-id')[:2]
+               
                 context = {'latest_result': latest_result}
                 last_uploaded_image = SkinDiseaseImage.objects.last()
     
     # Check if any images exist in the database
                 if last_uploaded_image is not None:
-                    context = {'latest_result':latest_result,'image': last_uploaded_image}
+                    context = {'latest_result':latest_result,'image': last_uploaded_image, 'hospitals':hospitals}
                     return render(request, 'upload_image.html', context)
                 else:
                     # Handle the case where no images are found
@@ -392,6 +436,7 @@ def upload_image(request):
         skin_disease_image_view(request)
 
     return render(request, 'upload_image.html', {'form': form, 'success_message': success_message, 'error_message': error_message})
+
 
 
 
@@ -455,4 +500,11 @@ def display_skin_disease_image_by_id(request, image_id):
     # Pass the filtered image to the template for rendering
     return render(request, 'image_detail.html', {'image': image})
 
+
+
+# http://www.nairobisouthhospital.org/  mp shah hospital +254 111 000600
+# http://thenairobihosp.org/  the nairobi hospital  +254 20 2845000
+# http://www.nairobisouthhospital.org/  the nairobi south hospital   +254 20 5145300
+# http://www.materkenya.com/ Mater Misericordiae Hospital +254 20 6903000
+# http://www.avenuehealthcare.com/ Avenue Hospital Nairobi: +254 711 060000
 

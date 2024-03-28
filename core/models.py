@@ -144,3 +144,10 @@ class TensorflowResult(models.Model):
     def __str__(self):
         return f"Disease: {self.skin_diseases}, Accuracy: {self.accuracy}"
 
+class Hospital(models.Model):
+    name =  models.CharField(max_length=200, blank =  False, null = False)
+    website = models.CharField(max_length=500, blank= False, null=False)
+    contact = models.CharField(max_length=40, blank=True, null= True)
+
+    def __str__(self):
+        return f"Hospitals:  {self.name}, {self.contact}  ,{self.website}"

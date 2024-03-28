@@ -49,7 +49,7 @@
               <label for="image">Select Image:</label>
               <input type="file" name="image" id="image" class="form-control-file rounded-lg
               border p-4" accept="image/*" onchange="displayImage(this);" required>
-              <small class="form-text text-muted">Please select an image file (jpg, jpeg, png, etc.)</small>
+              <small class="form-text text-muted">Please uplaod only skin images of type (jpg, jpeg, png, etc.)</small>
             </div>
             <button type="submit" class="btn btn-primary w-full text-white font-semibold px-4 py-2
              bg-blue-400 rounded hover:bg-blue-500">Detect Skin Diseases</button>
@@ -67,10 +67,17 @@
   
       {% if latest_result %}
           <p><strong>Skin Disease:</strong> {{ latest_result.skin_diseases }}</p>
-          <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p>
+          <!-- <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p> -->
       {% else %}
           <p>No results available.</p>
-      {% endif %}
+      {% endif %} 
+      <h1><strong> Recommended Hospitals</strong></h1><hr>
+      <ul>
+          {% for hospital in hospitals %}
+              <li><strong>name : {{ hospital.name }}</strong>  <br> <p> website: <a href="{{ hospital.website }}" style= "color: blue;">{{ hospital.website }}</a></p> <br> 
+                <p>Contact: {{ hospital.contact }}</p> <hr></li>
+          {% endfor %}
+      </ul>
 
 
     </div>

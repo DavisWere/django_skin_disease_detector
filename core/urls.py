@@ -8,8 +8,6 @@ app_name = 'core'
 
 urlpatterns = [
     path('upload/success', views.upload_image, name='upload_success'),
-   
-    
     path('register',views.register_user, name='registration'),
     path('login',views.login_view, name='login'),
     path('',views.welcome, name='welcome'),
@@ -18,8 +16,8 @@ urlpatterns = [
     path('excel-report',views.generate_excel_file, name= 'generate_excel_file'),
     path('pdf-report', views.generate_pdf, name='generate_pdf'),
     path('upload', views.upload_image, name='upload_image'),
-    # path('geolocation', views.maps, name='maps'),
     path('geolocation', views.find_nearest_hospitals, name='find_nearest_hospitals'),
+    path('hospital-data/', views.hospital_data, name='hospital data'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # 

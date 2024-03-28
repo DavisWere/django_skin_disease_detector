@@ -21,6 +21,7 @@ import random
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+import requests
 
 ACNE = 'Acne'
 ECZEMA = 'Eczema (Dermatitis)'
@@ -141,31 +142,77 @@ DISEASE_CHOICES = [
 (DERMATOFIBROMA, 'Dermatofibroma')]
 
 from . import geolocation as GL
+MAPBOX_API_KEY = 'pk.eyJ1IjoidmljdHJvbiIsImEiOiJjbHU5emVmcmgwY2dqMm5xazZqbTFlYTd1In0.-BzT0RVwGtYQ1B6c2x1YEQ'
+MAPBOX_HOSPITALS_URL = 'https://api.mapbox.com/datasets/v1/mapbox/covid-19-testsites-us?access_token={api_key}'
+
 
 def maps(request):
-    if request.method == 'POST':
-        address = request.POST.get('address')
-        latitude, longitude = GL.get_geolocation(address)
-        if latitude is not None and longitude is not None:
-            context = {
-                'latitude': latitude,
-                'longitude': longitude
-            }
-        else:
-            context = {
-                'error': 'Failed to get coordinates for the address.'
-            }
-    else:
-        context = {}
-    return render(request, 'components/maps.html', context)
+    return render(request, 'components/maps.html')
 
+
+# Define the view function
+def find_nearest_hospitals(request):
+    try:
+        # Obtain user's IP address
+        user_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', ''))
+
+        # Use IP geolocation service to obtain user's location (latitude and longitude)
+        ip_api_url = f'http://ip-api.com/json/{user_ip}'
+        ip_response = requests.get(ip_api_url)
+        ip_data = ip_response.json()
+
+        # Extract latitude and longitude from the IP geolocation response
+        if ip_data['status'] == 'success':
+            latitude = ip_data['lat']
+            longitude = ip_data['lon']
+        else:
+            # Use default coordinates for Nairobi if IP geolocation fails
+            latitude = -1.286389
+            longitude = 36.817223
+
+        # Mapbox API endpoint for finding places (hospitals in this case)
+        mapbox_api_key = 'YOUR_MAPBOX_API_KEY'
+        url = f"https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity={longitude},{latitude}&access_token={MAPBOX_API_KEY}"
+
+        # Make a GET request to the Mapbox API
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for any HTTP errors
+
+        # Parse the JSON response
+        data = response.json()
+
+        # Check if the features list is empty
+        if 'features' in data and data['features']:
+            # Extract hospital information from the response
+            hospitals = []
+            for feature in data['features']:
+                hospitals.append({
+                    'name': feature['text'],
+                    'address': ', '.join(feature['place_name'].split(',')[1:]),  # Extracting the address part from the full place name
+                    'latitude': feature['geometry']['coordinates'][1],
+                    'longitude': feature['geometry']['coordinates'][0],
+                })
+        else:
+            # If no hospitals found, return an empty list
+            hospitals = []
+
+        # Calculate bounding box coordinates for Kenya
+        kenya_bbox = [33.501601, -4.677098, 41.90625, 5.237941]  # [min_lon, min_lat, max_lon, max_lat]
+
+        # Render the template with the list of hospitals and Kenya bounding box
+        return render(request, 'components/hospital_list.html', {'hospitals': hospitals, 'kenya_bbox': kenya_bbox})
+
+    except requests.exceptions.RequestException as e:
+        # Handle request exceptions (e.g., connection errors, timeout)
+        error_message = f"Error: {e}"
+        return render(request, 'error.html', {'error_message': error_message})
 
 
 def generate_data():
-   
+
     skin_diseases = [disease[0] for disease in DISEASE_CHOICES]
 
-    
+
     random_disease_index = random.randint(0, len(skin_diseases) - 1)
     random_disease = skin_diseases[random_disease_index]
 
@@ -176,7 +223,7 @@ def generate_data():
 
     random_accuracy_index = random.randint(0, len(accuracies) - 1)
     random_accuracy = accuracies[random_accuracy_index]
-   
+
     return random_disease, random_accuracy
     
 

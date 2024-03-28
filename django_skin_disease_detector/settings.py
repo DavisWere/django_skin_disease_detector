@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-z+-5v1*l*+v%4&3s%z#er-f@xqs$zb+bx_ic=zs@8z13kqk$dj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'core.CustomUser'
 
 # Application definition
@@ -57,7 +56,7 @@ ROOT_URLCONF = 'django_skin_disease_detector.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'core', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

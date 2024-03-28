@@ -1,0 +1,77 @@
+<!-- templates/components/hospital_list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearest Hospitals in Nairobi</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+
+    <style>
+        /* Add CSS styles for better presentation */
+        /* Style the list */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        /* Style each hospital item */
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        /* Style the map container */
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col justify-center items-center gap-4">
+    <div class="bg-red-200 w-full">
+        {% include 'components/nav.html' %}
+    </div>
+    <h1 class="text-2xl font-bold hidden">Nearest Hospitals in Nairobi</h1>
+
+    <!-- Display the Mapbox map -->
+    <div id="map"></div>
+
+    <!-- Display the list of hospitals -->
+    <ul class="flex flex-wrap gap-4 hidden">
+        {% for hospital in hospitals %}
+        <li>
+            <h3>{{ hospital.name }}</h3>
+            <p><strong>Address:</strong> {{ hospital.address }}</p>
+            <p><strong>Latitude:</strong> {{ hospital.latitude }}</p>
+            <p><strong>Longitude:</strong> {{ hospital.longitude }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoidmljdHJvbiIsImEiOiJjbHU5emVmcmgwY2dqMm5xazZqbTFlYTd1In0.-BzT0RVwGtYQ1B6c2x1YEQ';
+
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [36.8219, -1.2921], // Center the map on Nairobi
+            zoom: 12 // Set the zoom level to focus on Nairobi
+        });
+
+        // Add hospital markers to the map
+        {% for hospital in hospitals %}
+        new mapboxgl.Marker()
+            .setLngLat([{{ hospital.longitude }}, {{ hospital.latitude }}])
+            .addTo(map);
+        {% endfor %}
+    </script>
+</body>
+</html>

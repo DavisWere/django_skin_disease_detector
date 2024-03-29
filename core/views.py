@@ -447,7 +447,7 @@ def register_user(request):
         if form.is_valid():
             form.save() 
             # Redirect to a success page or login page
-            return redirect('/upload')  
+            return redirect('/login')  
     else:
         form = CustomUserRegistrationForm()
     return render(request, 'register.html', {'form': form})

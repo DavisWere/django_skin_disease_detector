@@ -19,6 +19,7 @@ class CustomUser(AbstractUser):
 
 class SkinDiseaseImage(models.Model):
     image = models.ImageField(upload_to='skin_disease_images/')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null= True, blank=True)
 
 class TensorflowResult(models.Model):
     ACNE = 'Acne'
@@ -140,6 +141,7 @@ class TensorflowResult(models.Model):
 
     accuracy = models.CharField(max_length= 4, blank=False, null= False)
     skin_diseases = models.CharField(max_length= 250, blank= True, null= True, choices= DISEASE_CHOICES)
+    user = models.ForeignKey(CustomUser, on_delete =models.CASCADE, blank= True, null=True)
 
     def __str__(self):
         return f"Disease: {self.skin_diseases}, Accuracy: {self.accuracy}"
@@ -148,6 +150,15 @@ class Hospital(models.Model):
     name =  models.CharField(max_length=200, blank =  False, null = False)
     website = models.CharField(max_length=500, blank= False, null=False)
     contact = models.CharField(max_length=40, blank=True, null= True)
+    user = models.ForeignKey(CustomUser, on_delete = models.CASCADE, blank =True, null =True)
 
     def __str__(self):
         return f"Hospitals:  {self.name}, {self.contact}  ,{self.website}"
+    
+class History(models.Model):
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE, blank=True, null=True)
+    tensorflow_result = models.ForeignKey(TensorflowResult, on_delete=models.CASCADE, blank=True, null=True)
+    skin_disease_image = models.ForeignKey(SkinDiseaseImage, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f"History ID: {self.id}, Hospital: {self.hospital}, Tensorflow Result: {self.tensorflow_result}, Skin Disease Image: {self.skin_disease_image}"

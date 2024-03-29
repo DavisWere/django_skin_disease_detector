@@ -64,7 +64,11 @@
       
       <!-- Display the image using its URL -->
       <img src="{{ image.image.url }}" alt="Skin Disease Image">
-  
+      {% if user %}
+          <p><strong> welcome, </strong> {{ user }}!</p>
+      {% else %}
+          <p>You are not logged in.</p>
+      {% endif %}
       {% if latest_result %}
           <p><strong>Skin Disease:</strong> {{ latest_result.skin_diseases }}</p>
           <!-- <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p> -->

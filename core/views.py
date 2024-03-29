@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SkinDiseaseImageForm, CustomUserRegistrationForm ,LoginForm
 from django.contrib import messages
-from .models import TensorflowResult, SkinDiseaseImage, Hospital
+from .models import TensorflowResult, SkinDiseaseImage, Hospital, CustomUser
 from .forms import LoginForm
 import pandas as pd
 import openpyxl 
@@ -283,7 +283,8 @@ def insert_data_into_database():
 
 def generate_excel_file(request):
     # Query the database to retrieve all TensorflowResult objects
-    results = TensorflowResult.objects.all()
+    results = TensorflowResult.objects.all(),
+    
 
     # Create a DataFrame to store the data
     data = {'Skin Disease': [], 'Accuracy': []}
@@ -391,12 +392,14 @@ def skin_disease_image_view(request):
         # Handle the case where no images are found
         return render(request, 'no_images.html')
 
-def upload_image(request):
+
+def upload_image( request):
     success_message = None  # Initialize success message variable
     error_message = None  # Initialize error message variable
 
     if request.method == 'POST':
         form = SkinDiseaseImageForm(request.POST, request.FILES)
+        request.user
         
         if form.is_valid():
             if request.FILES.get('image', False):  # Check if an image file is uploaded
@@ -405,7 +408,7 @@ def upload_image(request):
                 
                 insert_data_into_database()
                 hospital_data(request)
-                
+                user = request.user            
                 messages.success(request, success_message)
                 latest_result = TensorflowResult.objects.last()
                 hospitals = Hospital.objects.order_by('-id')[:2]
@@ -415,7 +418,7 @@ def upload_image(request):
     
     # Check if any images exist in the database
                 if last_uploaded_image is not None:
-                    context = {'latest_result':latest_result,'image': last_uploaded_image, 'hospitals':hospitals}
+                    context = {'latest_result':latest_result,'image': last_uploaded_image,'user':user, 'hospitals':hospitals}
                     return render(request, 'upload_image.html', context)
                 else:
                     # Handle the case where no images are found
@@ -436,15 +439,6 @@ def upload_image(request):
         skin_disease_image_view(request)
 
     return render(request, 'upload_image.html', {'form': form, 'success_message': success_message, 'error_message': error_message})
-
-
-
-
-
-
-
-
-
 
 
 def register_user(request):
@@ -500,11 +494,4 @@ def display_skin_disease_image_by_id(request, image_id):
     # Pass the filtered image to the template for rendering
     return render(request, 'image_detail.html', {'image': image})
 
-
-
-# http://www.nairobisouthhospital.org/  mp shah hospital +254 111 000600
-# http://thenairobihosp.org/  the nairobi hospital  +254 20 2845000
-# http://www.nairobisouthhospital.org/  the nairobi south hospital   +254 20 5145300
-# http://www.materkenya.com/ Mater Misericordiae Hospital +254 20 6903000
-# http://www.avenuehealthcare.com/ Avenue Hospital Nairobi: +254 711 060000
 

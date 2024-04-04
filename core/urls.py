@@ -18,6 +18,7 @@ urlpatterns = [
     path('upload', views.upload_image, name='upload_image'),
     path('geolocation', views.find_nearest_hospitals, name='find_nearest_hospitals'),
     path('hospital-data/', views.hospital_data, name='hospital data'),
+    path('admin-dashboard',views.display_data, name = 'data report'),  # for admin dashboard
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # 

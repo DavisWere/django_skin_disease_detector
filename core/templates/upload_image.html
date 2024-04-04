@@ -73,9 +73,9 @@
           <p><strong>Skin Disease:</strong> {{ latest_result.skin_diseases }}</p>
           <!-- <p><strong>Accuracy:</strong> {{ latest_result.accuracy }}</p> -->
       {% else %}
-          <p>No results available.</p>
+          <p>Please upload a skin image to view the results.</p>
       {% endif %} 
-      <h1><strong> Recommended Hospitals</strong></h1><hr>
+      <h1><strong> Below are Recommended Hospitals</strong></h1><hr>
       <ul>
           {% for hospital in hospitals %}
               <li><strong>name : {{ hospital.name }}</strong>  <br> <p> website: <a href="{{ hospital.website }}" style= "color: blue;">{{ hospital.website }}</a></p> <br> 

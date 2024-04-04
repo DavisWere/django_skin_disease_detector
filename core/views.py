@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import SkinDiseaseImageForm, CustomUserRegistrationForm ,LoginForm
 from django.contrib import messages
 from .models import TensorflowResult, SkinDiseaseImage, Hospital, CustomUser
+from django.contrib.auth.models import User
 from .forms import LoginForm
 import pandas as pd
 import openpyxl 
@@ -493,5 +494,24 @@ def display_skin_disease_image_by_id(request, image_id):
 
     # Pass the filtered image to the template for rendering
     return render(request, 'image_detail.html', {'image': image})
+
+@login_required
+def display_data (request):
+    user = request.user
+    if user is not None:
+        if user.is_superuser:
+            diseases= TensorflowResult.objects.all()
+            hospitals = Hospital.objects.all()
+            users= CustomUser.objects.all()
+            images = SkinDiseaseImage.objects.all()
+            data={'users': users,'images': images ,'hospitals': hospitals,'diseases': diseases}
+            return render(request, 'admin.html', data)
+        else:
+            return redirect('/upload')
+    else:
+        return redirect('login')
+
+       
+    
 
 

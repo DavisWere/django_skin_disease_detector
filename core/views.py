@@ -267,9 +267,10 @@ def generate_data():
     random_accuracy = accuracies[random_accuracy_index]
 
     return random_disease, random_accuracy
-    
 
-def insert_data_into_database():
+    
+@login_required
+def insert_data_into_database(request, user):
  
     random_disease, random_accuracy = generate_data()
     
@@ -278,7 +279,7 @@ def insert_data_into_database():
     # print("Accuracy:", random_accuracy)
 
     # Create a TensorflowResult instance with the random disease and accuracy
-    result = TensorflowResult.objects.create(skin_diseases=random_disease, accuracy=random_accuracy)
+    result = TensorflowResult.objects.create(skin_diseases=random_disease, accuracy=random_accuracy, user=user)
     # print("Created TensorflowResult:", result)
 
 
@@ -401,15 +402,18 @@ def upload_image( request):
     if request.method == 'POST':
         form = SkinDiseaseImageForm(request.POST, request.FILES)
         request.user
+        test_user = request.user
         
         if form.is_valid():
             if request.FILES.get('image', False):  # Check if an image file is uploaded
                 form.save()
                 # success_message = ''
                 
-                insert_data_into_database()
                 hospital_data(request)
                 user = request.user            
+                print(user)
+                insert_data_into_database(request, user)    
+
                 messages.success(request, success_message)
                 latest_result = TensorflowResult.objects.last()
                 hospitals = Hospital.objects.order_by('-id')[:2]
@@ -504,8 +508,24 @@ def display_data (request):
             hospitals = Hospital.objects.all()
             users= CustomUser.objects.all()
             images = SkinDiseaseImage.objects.all()
+             
+            values = []
+
+            for item in images:
+
+                values.append({
+                    'image': images[random.randint(0, len(images) - 1)].image,
+                    'user': users[random.randint(0, len(users) - 1)],
+                    'hospital': hospitals[random.randint(0, len(hospitals) - 1)],
+                    'diseases': diseases[random.randint(0, len(diseases) - 1)]
+                })
+                print(values)
+            
+
+
             data={'users': users,'images': images ,'hospitals': hospitals,'diseases': diseases}
-            return render(request, 'admin.html', data)
+            context = {'data': values}
+            return render(request, 'admin.html', context)
         else:
             return redirect('/upload')
     else:

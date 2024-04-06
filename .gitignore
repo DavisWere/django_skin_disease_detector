@@ -159,3 +159,10 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 skin_disease_images/
+training_dataset/
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# To avoid sending data to Anaconda when running ipython notebooks:
+!pip uninstall -qf ipympl || echo "Anaconda seems to be clean."
+!jupyter --runtime-dir

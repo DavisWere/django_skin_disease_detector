@@ -91,19 +91,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for image in images %}
+                    <!-- {{data}} -->
+                    {% for item in data %}
                     <tr>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            <img src="{{ image.image.url }}" alt="Skin Disease Image" style="max-width: 100px; max-height: 100px;">
+                            
+                            <img src="{{ item.image.url }}" alt="Skin Disease Image" style="max-width: 100px; max-height: 100px;">
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            Skin Rash
+                           {{item.diseases.skin_diseases}} : {{item.diseases.accuracy}} 
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            The Nairobi Hospital
+                            {{item.hospital.name}}
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            Grace Wangui
+                            {{item.user}}
                         </td>
                     </tr>
                     {% endfor %}

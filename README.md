@@ -7,3 +7,5 @@
 4. Run Migrations `python manage.py migrate`
 5. Create a super user `python manage.py createsuperuser`
 5. Run project `python manage.py runserver`
+
+6. run pip install -r requirements.txt

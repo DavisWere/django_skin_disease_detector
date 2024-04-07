@@ -7,22 +7,30 @@ from django.contrib import messages
 from .models import TensorflowResult, SkinDiseaseImage, Hospital, CustomUser
 from django.contrib.auth.models import User
 from .forms import LoginForm
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.utils.html import escape
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+import random
 import pandas as pd
 import openpyxl 
-from openpyxl import Workbook
-from openpyxl.chart import BarChart, Reference
+# from openpyxl import Workbook
+from openpyxl.chart import BarChart, Reference 
 from openpyxl.styles import PatternFill
 from openpyxl.drawing.colors import ColorChoice
 from io import BytesIO
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from django.http import HttpResponse
 import random
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+
 import requests
+#from wkhtmltopdf.views import PDFTemplateResponse
+# from weasyprint import HTML
 
 ACNE = 'Acne'
 ECZEMA = 'Eczema (Dermatitis)'
@@ -352,23 +360,26 @@ def generate_pdf(request):
 
     # Create a PDF document
     pdf = SimpleDocTemplate(buffer, pagesize=letter)
-    
+    # pdf = HTML(string=data)
+
     # Create a table
     table = Table(data)
 
     # Style the table
-    style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
-                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                        ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
 
     # Apply the table style
     table.setStyle(style)
 
-    # Add table to the PDF
+    # Build the PDF document with the table
     pdf.build([table])
 
     # Get PDF content from buffer
@@ -527,11 +538,111 @@ def display_data (request):
             context = {'data': values}
             return render(request, 'admin.html', context)
         else:
-            return redirect('/upload')
+            return redirect('/')
     else:
         return redirect('login')
 
        
     
 
+# def generate_pdf_report(request):
+#     user = request.user
+#     if user is not None and user.is_superuser:
+#         # Fetch data as per your existing view
+#         diseases = TensorflowResult.objects.all()
+#         hospitals = Hospital.objects.all()
+#         users = CustomUser.objects.all()
+#         images = SkinDiseaseImage.objects.all()
 
+#         # Prepare data for PDF
+#         data = []
+
+#         for item in images:
+#             data.append({
+#                 'image': images[random.randint(0, len(images) - 1)].image.url,
+#                 'user': users[random.randint(0, len(users) - 1)],
+#                 'hospital': hospitals[random.randint(0, len(hospitals) - 1)],
+#                 'diseases': diseases[random.randint(0, len(diseases) - 1)]
+#             })
+
+#         # Render HTML template using the data
+#         template = get_template('pdf.html')
+#         rendered_html = template.render({'data': data})
+
+#         # Create PDF using reportlab and other libraries
+#         # pdf_file = BytesIO()
+#         # pisa_status = pisa.CreatePDF(
+#         #     escape(rendered_html), dest=pdf_file)
+
+#         # # Check if PDF generation was successful
+#         # if not pisa_status.err:
+#         #     # Set response headers for PDF download
+#         #     response = HttpResponse(
+#         #         pdf_file.getvalue(), content_type='application/pdf')
+#         #     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+#         #     return response
+
+
+#         # Generate the PDF document
+#         pdf = HTML(string=rendered_html)
+#         pdf_document = pdf.write_pdf()
+
+#         # Create a HTTP response with the PDF content
+#         response = HttpResponse(content_type='application/pdf')
+#         response['Content-Disposition'] = 'attachment; filename=output.pdf'
+#         response.write(pdf_document)
+
+#     # Handle unauthorized access or other conditions
+#     return HttpResponse('Unauthorized or Error occurred.')
+
+def generate_pdf_report(request):
+    user = request.user
+    if user is not None and user.is_superuser:
+        diseases = TensorflowResult.objects.all()
+        hospitals = Hospital.objects.all()
+        users = CustomUser.objects.all()
+        images = SkinDiseaseImage.objects.all()
+
+        # Create a BytesIO buffer to store the PDF content
+        buffer = BytesIO()
+
+        # Create a PDF canvas with landscape orientation
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+        elements = []
+
+        # Define table data and styles
+        table_data = [['Name', 'Email', 'Hospital name', 'Diseases', 'accuracy']]
+        for user in users:
+            hospital = hospitals[random.randint(0, len(hospitals) - 1)]
+            disease = diseases[random.randint(0, len(diseases) - 1)]
+            image = images[random.randint(0, len(images) - 1)]
+            table_data.append([user.first_name, user.email,  hospital.name, 
+                               disease.skin_diseases, disease.accuracy])
+
+        # Create the table
+        table = Table(table_data, colWidths=[50, 150, 150, 200, 50])
+        table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), '#A9A9A9'),
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), '#FFFFFF'),
+                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                                  ('INNERGRID', (0, 0), (-1, -1), 0.25, '#000000'),
+                                  ('BOX', (0, 0), (-1, -1), 0.25, '#000000'),
+                                  ('WORDWRAP', (0, 0), (-1, -1))]) 
+        table.setStyle(table_style)
+        elements.append(table)
+
+        # Build the PDF document
+        doc.build(elements)
+
+        # Get the PDF content from the BytesIO buffer
+        pdf_content = buffer.getvalue()
+        buffer.close()
+
+        # Create an HttpResponse object with the PDF content
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        response.write(pdf_content)
+
+        return response
+    else:
+        return HttpResponse("Unauthorized", status=401)

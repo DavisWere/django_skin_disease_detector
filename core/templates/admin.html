@@ -80,13 +80,21 @@
        <div style="max-width: 1200px; margin: 0 ; ">
 
         <div style="margin-bottom: 40px; width: 100%;" class="w-full">
+            <div class="w-full flex justify-end  items-center py-2">
+                <a href="/pdf-report">
+                    <button class="py-2 px-4 rounded bg-blue-500 text-white cursor-pointer">
+                        Print Pdf
+                    </button>   
+                </a>
+                
+            </div>
             <table style="width: 100%;" class="">
                 <thead>
                     <tr>
-                        <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">Analysis Image</th>
-                        <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">Disease</th>
+                        <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">Image Analysis</th>
+                        <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">Skin Disease Scanned</th>
                         <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">Hospital Recomended</th>
-                        <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">User</th>
+                        <th style="background-color: #f2f2f2; font-weight: bold; text-align: left; border: 1px solid #ddd; padding: 10px;">Patient</th>
                         <!-- Add more columns as needed -->
                     </tr>
                 </thead>
@@ -105,7 +113,12 @@
                             {{item.hospital.name}}
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            {{item.user}}
+                            <span class="capitalize">
+                                {{item.user.first_name}} 
+                                {{item.user.last_name}} 
+                            </span>
+                            {{item.user.email}}
+
                         </td>
                     </tr>
                     {% endfor %}

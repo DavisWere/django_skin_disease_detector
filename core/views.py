@@ -470,7 +470,7 @@ def register_user(request):
         if form.is_valid():
             form.save() 
             # Redirect to a success page or login page
-            return redirect('/login')  
+            return redirect('/login/')  
     else:
         form = CustomUserRegistrationForm()
     return render(request, 'register.html', {'form': form})
@@ -497,7 +497,7 @@ def welcome(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/login')
+    return redirect('/login/')
 
 def image_render(request):
     uploaded_image = None

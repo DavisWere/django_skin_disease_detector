@@ -484,7 +484,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/upload')  # Redirect to the upload image page
+                return redirect('/upload/')  # Redirect to the upload image page
             else:
                 # Invalid username or password, show error message
                 messages.error(request, 'Invalid username or password')

@@ -610,10 +610,7 @@ def display_data (request):
 def generate_pdf_report(request):
     user = request.user
     if user is not None and user.is_superuser:
-        diseases = TensorflowResult.objects.all()
-        hospitals = Hospital.objects.all()
-        users = CustomUser.objects.all()
-        images = SkinDiseaseImage.objects.all()
+        obj_data = History.objects.all()
 
         # Create a BytesIO buffer to store the PDF content
         buffer = BytesIO()
@@ -623,11 +620,11 @@ def generate_pdf_report(request):
         elements = []
 
         # Define table data and styles
-        table_data = [['Name', 'Email', 'Hospital name', 'Diseases', 'accuracy']]
-        for user in users:
-            hospital = hospitals[random.randint(0, len(hospitals) - 1)]
-            disease = diseases[random.randint(0, len(diseases) - 1)]
-            image = images[random.randint(0, len(images) - 1)]
+        table_data = [['Name', 'Patient Email','Hospital name','Diseases', 'accuracy']]
+        for data in obj_data:
+            hospital = data.hospital
+            disease = data.tensorflow_result
+            user = data.user
             table_data.append([user.first_name, user.email,  hospital.name, 
                                disease.skin_diseases, disease.accuracy])
 

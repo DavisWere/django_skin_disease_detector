@@ -625,7 +625,7 @@ def generate_pdf_report(request):
             hospital = data.hospital
             disease = data.tensorflow_result
             user = data.user
-            table_data.append([user.first_name, user.email,  hospital.name, 
+            table_data.append([user.username, user.email,  hospital.name, 
                                disease.skin_diseases, disease.accuracy])
 
         # Create the table

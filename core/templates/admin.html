@@ -103,21 +103,21 @@
                     {% for item in data %}
                     <tr>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            
-                            <img src="{{ item.image.url }}" alt="Skin Disease Image" style="max-width: 100px; max-height: 100px;">
+                            <img src="{{ item.skin_disease_image.image.url }}" alt="Skin Disease Image" style="max-width: 100px; max-height: 100px;">
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                           {{item.diseases.skin_diseases}} : {{item.diseases.accuracy}} 
+                            {{item.tensorflow_result.skin_diseases   }} : {{ item.tensorflow_result.accuracy }}
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
-                            {{item.hospital.name}}
+                            {{item.hospital}}
                         </td>
                         <td style="border: 1px solid #ddd; padding: 10px; text-align: left;">
                             <span class="capitalize">
+                                {{item.user}}
                                 {{item.user.first_name}} 
                                 {{item.user.last_name}} 
                             </span>
-                            {{item.user.email}}
+                            <!-- {{item.user.email}} -->
 
                         </td>
                     </tr>

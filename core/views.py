@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SkinDiseaseImageForm, CustomUserRegistrationForm ,LoginForm
 from django.contrib import messages
-from .models import TensorflowResult, SkinDiseaseImage, Hospital, CustomUser
+from .models import TensorflowResult, SkinDiseaseImage, Hospital, CustomUser, History
 from django.contrib.auth.models import User
 from .forms import LoginForm
 from django.template.loader import get_template
@@ -217,6 +217,7 @@ def find_nearest_hospitals(request):
         return render(request, 'error.html', {'error_message': error_message})
 def hospital_data(request):
     # Define hospital details
+    
     hospitals = [
         {
             'name': 'Mp Shah',
@@ -287,6 +288,7 @@ def insert_data_into_database(request, user):
     # print("Accuracy:", random_accuracy)
 
     # Create a TensorflowResult instance with the random disease and accuracy
+    print(random_accuracy, 'random accuracied')
     result = TensorflowResult.objects.create(skin_diseases=random_disease, accuracy=random_accuracy, user=user)
     # print("Created TensorflowResult:", result)
 
@@ -417,13 +419,18 @@ def upload_image( request):
         
         if form.is_valid():
             if request.FILES.get('image', False):  # Check if an image file is uploaded
+                form.instance.user = request.user 
+                form.instance.hospital = Hospital.objects.last()
                 form.save()
                 # success_message = ''
                 
                 hospital_data(request)
+                print('hosi', hospital_data(request), '\n', '\n')
                 user = request.user            
-                print(user)
                 insert_data_into_database(request, user)    
+
+                history = History.objects.create(hospital=Hospital.objects.last(), 
+                user=request.user,tensorflow_result=TensorflowResult.objects.last(), skin_disease_image= SkinDiseaseImage.objects.last() )
 
                 messages.success(request, success_message)
                 latest_result = TensorflowResult.objects.last()
@@ -519,23 +526,28 @@ def display_data (request):
             hospitals = Hospital.objects.all()
             users= CustomUser.objects.all()
             images = SkinDiseaseImage.objects.all()
+            history = History.objects.all()
              
             values = []
+            matched_images_and_users = []
 
-            for item in images:
+            for hist in history:
+                print('hist', hist, '\n')
 
-                values.append({
-                    'image': images[random.randint(0, len(images) - 1)].image,
-                    'user': users[random.randint(0, len(users) - 1)],
-                    'hospital': hospitals[random.randint(0, len(hospitals) - 1)],
-                    'diseases': diseases[random.randint(0, len(diseases) - 1)]
-                })
-                print(values)
+            # for image in images:
+            #     for user1 in users:
+            #         for disease in diseases:
+            #             if image.user == user1 and user1 == disease.user:
+            #                 already_added = False
+            #                 for item in matched_images_and_users:
+            #                     if item['user'] == user1 and item['image'] == image.image and item['disease'] == disease:
+            #                         already_added = True
+            #                         break
+            #                 if not already_added:
+            #                     matched_images_and_users.append({'user': user1, 'image': image.image, 'disease': disease})
+            #                     break   
             
-
-
-            data={'users': users,'images': images ,'hospitals': hospitals,'diseases': diseases}
-            context = {'data': values}
+            context = {'data': history}
             return render(request, 'admin.html', context)
         else:
             return redirect('/')

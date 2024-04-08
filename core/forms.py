@@ -6,7 +6,7 @@ from .models import SkinDiseaseImage, CustomUser
 class SkinDiseaseImageForm(forms.ModelForm):
     class Meta:
         model = SkinDiseaseImage
-        fields = ['image']
+        fields = ['image', 'user', 'hospital']
     
     
 
